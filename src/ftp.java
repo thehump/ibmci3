@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPCmd;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,17 +38,10 @@ public class ftp extends JFrame implements ActionListener {
     JButton btnConnect;
     JTextArea txtS;
     String newline = "\n";
+    FTPClient ftpClient;
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(btnProcess)) {
-            try {
-                processInformation();
-            } catch (UnknownHostException e1) {
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
+
         if (e.getSource().equals(btnConnect)) {
             try {
                 connectFTP();
@@ -57,15 +51,33 @@ public class ftp extends JFrame implements ActionListener {
                 e1.printStackTrace();
             }
         }
+        if (e.getSource().equals(btnProcess)) {
+            try {
+                processInformation();
+            } catch (UnknownHostException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
     public void processInformation() throws UnknownHostException, IOException {
-        Socket s = new Socket("192.168.69.69", 21);
-        ObjectOutputStream p = new ObjectOutputStream(s.getOutputStream());
+       // Socket s = new Socket("192.168.69.69", 21);
+   //   ObjectOutputStream p = new ObjectOutputStream(s.getOutputStream());
 
-        String name = txtName.getText();
-        String command = txtCommand.getText();
-        //int age = Integer.parseInt(txtAge.getText());
+      //  String name = txtName.getText();
+     //   String command = txtCommand.getText();
+    //    String rcmdtext= "crtlib hack400b";
+        String server = txtHost.getText();
+        int port = Integer.parseInt(txtPort.getText());
+        String user = txtUser.getText();
+        String pass = txtPass.getText();
+        FTPClient ftpClient = new FTPClient();
+
+        ftpClient.sendCommand(FTPCmd.CWD, "/home/thehump");
+
+                //int age = Integer.parseInt(txtAge.getText());
 
         //p.writeObject(test');
 
@@ -73,17 +85,17 @@ public class ftp extends JFrame implements ActionListener {
         //ObjectOutputStream output = new ObjectOutputStream(fileOutputStream);
         //String ftptxt = "pwd";
        // p.writeObject(ftptxt);
-        p.close();
+        //p.close();
 
-        p.flush();
+       // p.flush();
 
         // Here we read the details from server
-        BufferedReader response = new BufferedReader(new InputStreamReader(
-                s.getInputStream()));
-        txtS.setText("The server respond: " + response.readLine());
-        p.close();
-        response.close();
-        s.close();
+      //  BufferedReader response = new BufferedReader(new InputStreamReader(
+      //          s.getInputStream()));
+      //  txtS.setText("The server respond: " + response.readLine());
+      //  p.close();
+     //   response.close();
+     //   s.close();
     }
 
     public void connectFTP() throws UnknownHostException, IOException {
@@ -94,8 +106,8 @@ public class ftp extends JFrame implements ActionListener {
         int port = Integer.parseInt(txtPort.getText());
         String user = txtUser.getText();
         String pass = txtPass.getText();
-
         FTPClient ftpClient = new FTPClient();
+
 
         try {
 
@@ -124,7 +136,18 @@ public class ftp extends JFrame implements ActionListener {
             txtS.append("Oops! Something wrong happened"+ newline);
             ex.printStackTrace();
         }
+        //ftpClient.sendCommand(FTPCmd.CWD, "/home");
+        //ftpClient.sendCommand(FTPCmd.PRINT_WORKING_DIRECTORY);
+
+        ftpClient.sendCommand("debug");
+        ftpClient.sendCommand(txtCommand.getText());
+        //ftpClient.sendCommand(FTPCmd.MKD, "pwd");
+
+        System.out.println(ftpClient.getReplyString());
     }
+
+
+
     public void showServerReply(FTPClient ftpClient) {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
@@ -220,10 +243,21 @@ public class ftp extends JFrame implements ActionListener {
         txtS.setBounds(10, 245, 750, 120);
         add(txtS);
 
+        //set testing values
+        txtHost.setText("192.168.69.69");
+        txtPort.setText("21");
+        txtUser.setText("thehump");
+        txtPass.setText("asdasd");
+
+
+
+
         this.setVisible(true);
+
     }
 
     public static void main(String[] args) {
+
         new ftp();
     }
 
