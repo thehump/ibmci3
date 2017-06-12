@@ -14,7 +14,8 @@ import java.io.IOException;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPCmd;
-
+import com.ibm.as400.access.AS400FTP;
+import com.ibm.as400.access.AS400;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -63,19 +64,25 @@ public class ftp extends JFrame implements ActionListener {
     }
 
     public void processInformation() throws UnknownHostException, IOException {
+
+        AS400 system = new AS400();
+
+        AS400FTP   ftp    = new AS400FTP(system);
+        ftp.issueCommand("quote RCMD 'CRTLIB HACK400b'");
+
        // Socket s = new Socket("192.168.69.69", 21);
    //   ObjectOutputStream p = new ObjectOutputStream(s.getOutputStream());
 
       //  String name = txtName.getText();
      //   String command = txtCommand.getText();
     //    String rcmdtext= "crtlib hack400b";
-        String server = txtHost.getText();
-        int port = Integer.parseInt(txtPort.getText());
-        String user = txtUser.getText();
-        String pass = txtPass.getText();
-        FTPClient ftpClient = new FTPClient();
+    //    String server = txtHost.getText();
+    //    int port = Integer.parseInt(txtPort.getText());
+    //    String user = txtUser.getText();
+     //   String pass = txtPass.getText();
+     //   FTPClient ftpClient = new FTPClient();
 
-        ftpClient.sendCommand(FTPCmd.CWD, "/home/thehump");
+     //   ftpClient.sendCommand(FTPCmd.CWD, "/home/thehump");
 
                 //int age = Integer.parseInt(txtAge.getText());
 
@@ -117,6 +124,7 @@ public class ftp extends JFrame implements ActionListener {
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
                 txtS.append("Operation failed. Server reply code: " + replyCode + newline);
+
                 return;
             }
 
@@ -139,11 +147,13 @@ public class ftp extends JFrame implements ActionListener {
         //ftpClient.sendCommand(FTPCmd.CWD, "/home");
         //ftpClient.sendCommand(FTPCmd.PRINT_WORKING_DIRECTORY);
 
-        ftpClient.sendCommand("debug");
-        ftpClient.sendCommand(txtCommand.getText());
+        ftpClient.sendCommand("pwd");
+
+       // ftpClient.sendCommand(txtCommand.getText());
         //ftpClient.sendCommand(FTPCmd.MKD, "pwd");
 
         System.out.println(ftpClient.getReplyString());
+
     }
 
 
