@@ -68,7 +68,7 @@ public class ftp extends JFrame implements ActionListener {
         AS400 system = new AS400();
 
         AS400FTP   ftp    = new AS400FTP(system);
-        ftp.issueCommand("RCMD \"CRTLIB HACK400b)\"");
+        ftp.issueCommand("RCMD \"CRTLIB HACK400b\"");
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
 
