@@ -80,6 +80,12 @@ public class ftp extends JFrame implements ActionListener {
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
 
+        ftp.issueCommand("RCMD CPYTOIMPF FROMFILE(HACK400/FTPOUTPUT or HACK400/v3) TOSTMF(‘/home/hack400b/ftpoutput.txt)’ RCDDLM(*CRLF) ");
+        //ftp.issueCommand("help");
+        System.out.println(ftp.getLastMessage());
+
+
+
        // Socket s = new Socket("192.168.69.69", 21);
    //   ObjectOutputStream p = new ObjectOutputStream(s.getOutputStream());
 
