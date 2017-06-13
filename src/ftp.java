@@ -16,6 +16,11 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPCmd;
 import com.ibm.as400.access.AS400FTP;
 import com.ibm.as400.access.AS400;
+import com.ibm.as400.access.AS400SecurityException;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
