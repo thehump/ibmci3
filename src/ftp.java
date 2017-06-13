@@ -72,11 +72,11 @@ public class ftp extends JFrame implements ActionListener {
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
 
-        ftp.issueCommand("RCMD DSPJOBLOG OUTPUT(*OUTFILE) HACK400/FTPOUTPUT");
+        ftp.issueCommand("RCMD DSPJOBLOG OUTPUT(*OUTFILE) OUTFILE(HACK400B/FTPOUTPUT)");
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
 
-        ftp.issueCommand("RCMD RUNSQL SQL(‘create view v3 as SELECT QMHMDT from HACK400b/FTPOUTPUT’)");
+        ftp.issueCommand("RCMD RUNSQL SQL('create view v4 as SELECT QMHMDT from HACK400b/FTPOUTPUT') ");
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
 
