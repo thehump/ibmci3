@@ -1,0 +1,38 @@
+/**
+ * Created by thehump on 6/18/2017.
+ */
+import java.io.*;
+import java.util.*;
+import com.ibm.as400.access.*;
+
+
+public class jshell extends Object {
+
+    public static void main(String[] args){
+        String commandString = " ";
+
+        for (int i = 0; i < args.length ; i++){
+            commandString += args[i]+ " ";
+
+
+        }
+
+        AS400 as400 = new AS400();
+
+        CommandCall command = new CommandCall(as400);
+
+
+        try{
+            if (command.run(commandString))
+                System.out.println("jshell successful");
+            else
+                System.out.println("jshell failed");
+
+        }
+        catch (Exception e)
+        {
+            System.out.println("mjor failre");
+        }
+    }
+
+}
