@@ -2,6 +2,7 @@
  * Created by thehump on 6/18/2017.
  */
 
+import com.ibm.as400.access.AS400Message;
 import com.ibm.as400.access.CommandCall;
 import com.ibm.as400.access.AS400;
 
@@ -26,6 +27,15 @@ public class jshell extends Object {
                 System.out.println("jshell successful");
             else
                 System.out.println("jshell failed");
+
+            AS400Message[] messagelist = command.getMessageList();
+
+            for (int i=0; i < messagelist.length; i++){
+                System.out.print(messagelist[i].getID());
+                
+                System.out.print(messagelist[i].getText());
+
+            }
 
         }
         catch (Exception e)
