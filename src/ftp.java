@@ -1,3 +1,4 @@
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -16,10 +17,13 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPCmd;
 import com.ibm.as400.access.AS400FTP;
 import com.ibm.as400.access.AS400;
+import com.ibm.as400.access.AS400Message;
+import com.ibm.as400.access.CommandCall;
 import com.ibm.as400.access.AS400SecurityException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-
+import java.util.Date;
+//import AS400CommandCallTest;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,6 +49,8 @@ public class ftp extends JFrame implements ActionListener {
     JTextArea txtS;
     String newline = "\n";
     FTPClient ftpClient;
+    String commandStr;
+    CommandCall command;
 
     public void actionPerformed(ActionEvent e) {
 
@@ -134,7 +140,10 @@ public class ftp extends JFrame implements ActionListener {
         int port = Integer.parseInt(txtPort.getText());
         String user = txtUser.getText();
         String pass = txtPass.getText();
-        FTPClient ftpClient = new FTPClient();
+
+        AS400CommandCallTest();
+
+     /*   FTPClient ftpClient = new FTPClient();
 
 
         try {
@@ -175,6 +184,8 @@ public class ftp extends JFrame implements ActionListener {
 
         System.out.println(ftpClient.getReplyString());
 
+
+*/
     }
 
 
@@ -187,6 +198,47 @@ public class ftp extends JFrame implements ActionListener {
                 txtS.append("SERVER: " + aReply + newline);
             }
         }
+    }
+
+    public void AS400CommandCallTest(){
+        String server="blfscdv1";
+        String user = "dstec";
+        String pass = "asdf1@345";
+
+        String commandStr = "crtlib hack400c";
+
+        AS400 as400 = null;
+        try  {
+            // Create an AS400 object
+            as400 = new AS400(server, user, pass);
+
+            // Create a Command object
+            CommandCall command = new CommandCall(as400);
+
+            // Run the command.
+            System.out.println("Executing: " + commandStr);
+            boolean success = command.run(commandStr);
+
+            if (success) {
+                System.out.println("Command Executed Successfully.");
+            }else{
+                System.out.println("Command Failed!");
+            }
+
+            // Get the command results
+            AS400Message[] messageList = command.getMessageList();
+            for (AS400Message message : messageList){
+                System.out.println(message.getText());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            try{
+                // Make sure to disconnect
+                as400.disconnectAllServices();
+            }catch(Exception e){}
+        }
+
     }
 
     public ftp() {
