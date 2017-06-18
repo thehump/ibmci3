@@ -1,10 +1,9 @@
 /**
  * Created by thehump on 6/18/2017.
  */
-import java.io.*;
-import java.util.*;
-import com.ibm.as400.access.*;
 
+import com.ibm.as400.access.CommandCall;
+import com.ibm.as400.access.AS400;
 
 public class jshell extends Object {
 
