@@ -32,7 +32,7 @@ public class jshell extends Object {
 
             for (int i=0; i < messagelist.length; i++){
                 System.out.print(messagelist[i].getID());
-                
+
                 System.out.print(messagelist[i].getText());
 
             }

@@ -9,6 +9,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.FileOutputStream;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.*;
+import javax.swing.text.*;
 
 
 import java.io.IOException;
@@ -109,10 +114,20 @@ public class ftp extends JFrame implements ActionListener {
 
         ftp.get("/home/hack400b/ftpoutput.txt", "ftpoutput.txt");
 
-        
+        BufferedReader buff = null;
+
+        try {
+            buff = new BufferedReader(new FileReader("ftpoutput.txt"));
+            String str;
+            while ((str = buff.readLine()) != null) {
+                txtS.append("\n"+str);
+            }
+        } catch (IOException e) {
+        } finally {
+            try { buff.close(); } catch (Exception ex) { }
+        }
 
 
-        txtS.setText();
 
 
         //System.out.print(ftpoutput);
