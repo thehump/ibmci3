@@ -57,6 +57,8 @@ public class ftp extends JFrame implements ActionListener {
     FTPClient ftpClient;
     String commandStr;
     CommandCall command;
+    AS400FTP   ftp;
+    AS400   system;
 
     public void actionPerformed(ActionEvent e) {
 
@@ -80,38 +82,51 @@ public class ftp extends JFrame implements ActionListener {
         }
     }
 
-    public void processInformation() throws UnknownHostException, IOException {
+    public void connectFTP() throws UnknownHostException, IOException {
 
         AS400 system = new AS400();
 
         AS400FTP   ftp    = new AS400FTP(system);
 
-    /*
-        ftp.issueCommand("RCMD CRTLIB HACK400B");
-        //ftp.issueCommand("help");
-        System.out.println(ftp.getLastMessage());
 
-        ftp.issueCommand("RCMD DSPJOBLOG OUTPUT(*OUTFILE) OUTFILE(HACK400B/FTPOUTPUT)");
-        //ftp.issueCommand("help");
-        System.out.println(ftp.getLastMessage());
-
-        ftp.issueCommand("RCMD RUNSQL SQL('create view v4 as SELECT QMHMDT from HACK400b/FTPOUTPUT') ");
-        //ftp.issueCommand("help");
-        System.out.println(ftp.getLastMessage());
-
-        ftp.issueCommand("RCMD CPYTOIMPF FROMFILE(HACK400/FTPOUTPUT or HACK400/v3) TOSTMF(‘/home/hack400b/ftpoutput.txt)’ RCDDLM(*CRLF) ");
-        //ftp.issueCommand("help");
-        System.out.println(ftp.getLastMessage());
-*/
-
-        //ftp.issueCommand("RCMD STRQSH CMD('java jshell crtlib h4x2')");
        // ftp.issueCommand("RCMD CALL CGBINF/RCMD2JSHL PARM('CRTLIB HACK400Z6')");
 
 
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
-        String ftpoutput ="";
+        txtS.setText(ftp.getLastMessage());
+        //String ftpoutput ="";
 
+        ftp.connect();
+
+
+
+
+
+    }
+
+    public void processInformation() throws UnknownHostException, IOException {
+
+/*
+        String server = txtHost.getText();
+        int port = Integer.parseInt(txtPort.getText());
+        String user = txtUser.getText();
+        String pass = txtPass.getText();
+
+*/
+
+        System.out.println("Process Information Clicked");
+        System.out.println(ftp.getLastMessage());
+        writeToFile(txtCommand.getText());
+
+
+
+        //upload command box to ascii
+        ftp.put("ftpinput.txt", "/home/hack400b/ftpinput.txt");
+
+        
+
+        //download ascii output file
         ftp.get("/home/hack400b/ftpoutput.txt", "ftpoutput.txt");
 
         BufferedReader buff = null;
@@ -129,101 +144,6 @@ public class ftp extends JFrame implements ActionListener {
 
 
 
-
-        //System.out.print(ftpoutput);
-        //txtS.setText(ftpoutput);
-
-       // Socket s = new Socket("192.168.69.69", 21);
-   //   ObjectOutputStream p = new ObjectOutputStream(s.getOutputStream());
-
-      //  String name = txtName.getText();
-     //   String command = txtCommand.getText();
-    //    String rcmdtext= "crtlib hack400b";
-    //    String server = txtHost.getText();
-    //    int port = Integer.parseInt(txtPort.getText());
-    //    String user = txtUser.getText();
-     //   String pass = txtPass.getText();
-     //   FTPClient ftpClient = new FTPClient();
-
-     //   ftpClient.sendCommand(FTPCmd.CWD, "/home/thehump");
-
-                //int age = Integer.parseInt(txtAge.getText());
-
-        //p.writeObject(test');
-
-        //FileOutputStream fileOutputStream = new FileOutputStream("C:\\wut\\ibmci3\\src\\ftp.txt");
-        //ObjectOutputStream output = new ObjectOutputStream(fileOutputStream);
-        //String ftptxt = "pwd";
-       // p.writeObject(ftptxt);
-        //p.close();
-
-       // p.flush();
-
-        // Here we read the details from server
-      //  BufferedReader response = new BufferedReader(new InputStreamReader(
-      //          s.getInputStream()));
-      //  txtS.setText("The server respond: " + response.readLine());
-      //  p.close();
-     //   response.close();
-     //   s.close();
-    }
-
-    public void connectFTP() throws UnknownHostException, IOException {
-
-
-
-        String server = txtHost.getText();
-        int port = Integer.parseInt(txtPort.getText());
-        String user = txtUser.getText();
-        String pass = txtPass.getText();
-
-        AS400CommandCallTest();
-
-
-
-     /*   FTPClient ftpClient = new FTPClient();
-
-
-        try {
-
-            ftpClient.connect(server, port);
-            showServerReply(ftpClient);
-
-            int replyCode = ftpClient.getReplyCode();
-            if (!FTPReply.isPositiveCompletion(replyCode)) {
-                txtS.append("Operation failed. Server reply code: " + replyCode + newline);
-
-                return;
-            }
-
-            boolean success = ftpClient.login(user, pass);
-            showServerReply(ftpClient);
-
-            if (!success) {
-            //    txtS.appendText("Could not login to the server" + newline);
-            //    System.out.println("Could not login to the server");
-                return;
-            } else {
-             //   System.out.println("LOGGED IN SERVER");
-                txtS.append("LOGGED IN SERVER" + newline);
-            }
-
-        } catch (IOException ex) {
-            txtS.append("Oops! Something wrong happened"+ newline);
-            ex.printStackTrace();
-        }
-        //ftpClient.sendCommand(FTPCmd.CWD, "/home");
-        //ftpClient.sendCommand(FTPCmd.PRINT_WORKING_DIRECTORY);
-
-        ftpClient.sendCommand("pwd");
-
-       // ftpClient.sendCommand(txtCommand.getText());
-        //ftpClient.sendCommand(FTPCmd.MKD, "pwd");
-
-        System.out.println(ftpClient.getReplyString());
-
-
-*/
     }
 
 
@@ -278,7 +198,25 @@ public class ftp extends JFrame implements ActionListener {
         }
 
     }
-
+    private void writeToFile(String list) throws IOException{
+///
+        File f = new File("ftpinput.txt");
+        System.out.println(f);
+        FileWriter fw = new FileWriter(f,true);
+        System.out.println(fw);
+        try{
+            BufferedWriter bw = new BufferedWriter(fw);
+            System.out.println(bw);
+            bw.newLine();
+            bw.write(list);
+            bw.flush();
+            bw.close();
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        ///
+    }
     public ftp() {
         this.setTitle("AS400 IBM FTP Command Interpreter");
         this.setSize(800, 600);
