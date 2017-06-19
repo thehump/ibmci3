@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.FileOutputStream;
 
+
 import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -79,6 +80,8 @@ public class ftp extends JFrame implements ActionListener {
         AS400 system = new AS400();
 
         AS400FTP   ftp    = new AS400FTP(system);
+
+    /*
         ftp.issueCommand("RCMD CRTLIB HACK400B");
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
@@ -94,8 +97,26 @@ public class ftp extends JFrame implements ActionListener {
         ftp.issueCommand("RCMD CPYTOIMPF FROMFILE(HACK400/FTPOUTPUT or HACK400/v3) TOSTMF(‘/home/hack400b/ftpoutput.txt)’ RCDDLM(*CRLF) ");
         //ftp.issueCommand("help");
         System.out.println(ftp.getLastMessage());
+*/
+
+        //ftp.issueCommand("RCMD STRQSH CMD('java jshell crtlib h4x2')");
+       // ftp.issueCommand("RCMD CALL CGBINF/RCMD2JSHL PARM('CRTLIB HACK400Z6')");
 
 
+        //ftp.issueCommand("help");
+        System.out.println(ftp.getLastMessage());
+        String ftpoutput ="";
+
+        ftp.get("/home/hack400b/ftpoutput.txt", "ftpoutput.txt");
+
+        
+
+
+        txtS.setText();
+
+
+        //System.out.print(ftpoutput);
+        //txtS.setText(ftpoutput);
 
        // Socket s = new Socket("192.168.69.69", 21);
    //   ObjectOutputStream p = new ObjectOutputStream(s.getOutputStream());
@@ -142,6 +163,8 @@ public class ftp extends JFrame implements ActionListener {
         String pass = txtPass.getText();
 
         AS400CommandCallTest();
+
+
 
      /*   FTPClient ftpClient = new FTPClient();
 
