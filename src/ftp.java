@@ -58,7 +58,7 @@ public class ftp extends JFrame implements ActionListener {
     String commandStr;
     CommandCall command;
     AS400FTP   ftp;
-    AS400   system;
+    AS400 system;
 
     public void actionPerformed(ActionEvent e) {
 
@@ -85,19 +85,20 @@ public class ftp extends JFrame implements ActionListener {
     public void connectFTP() throws UnknownHostException, IOException {
 
         AS400 system = new AS400();
-
         AS400FTP   ftp    = new AS400FTP(system);
+
 
 
        // ftp.issueCommand("RCMD CALL CGBINF/RCMD2JSHL PARM('CRTLIB HACK400Z6')");
 
 
         //ftp.issueCommand("help");
-        System.out.println(ftp.getLastMessage());
-        txtS.setText(ftp.getLastMessage());
+
         //String ftpoutput ="";
 
         ftp.connect();
+        System.out.println(ftp.getLastMessage());
+        txtS.setText(ftp.getLastMessage());
 
 
 
@@ -114,12 +115,15 @@ public class ftp extends JFrame implements ActionListener {
         String pass = txtPass.getText();
 
 */
+        AS400 system = new AS400();
+        AS400FTP   ftp    = new AS400FTP(system);
 
+        //AS400FTP ftp2 = ftp;
         System.out.println("Process Information Clicked");
         System.out.println(ftp.getLastMessage());
+
+        //write command to ftpinput.txt
         writeToFile(txtCommand.getText());
-
-
 
         //upload command box to ascii
         ftp.put("ftpinput.txt", "/home/hack400b/ftpinput.txt");
@@ -202,12 +206,12 @@ public class ftp extends JFrame implements ActionListener {
 ///
         File f = new File("ftpinput.txt");
         System.out.println(f);
-        FileWriter fw = new FileWriter(f,true);
+        FileWriter fw = new FileWriter(f,false);
         System.out.println(fw);
         try{
             BufferedWriter bw = new BufferedWriter(fw);
             System.out.println(bw);
-            bw.newLine();
+           // bw.newLine();
             bw.write(list);
             bw.flush();
             bw.close();
@@ -218,10 +222,14 @@ public class ftp extends JFrame implements ActionListener {
         ///
     }
     public ftp() {
+
+
         this.setTitle("AS400 IBM FTP Command Interpreter");
         this.setSize(800, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
+
+
 
         //add labels and text boxes
         lblHost = new JLabel("Host: ");
@@ -316,6 +324,7 @@ public class ftp extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
+
 
         new ftp();
     }
