@@ -128,13 +128,14 @@ public class ftp extends JFrame implements ActionListener {
         //upload command box to ascii
         ftp.put("ftpinput.txt", "/home/hack400b/ftpinput.txt");
 
-        
+        //execute rcmd2jshll
+        ftp.issueCommand("RCMD CALL HACK400B/RCMD2JSHLI");
 
         //download ascii output file
         ftp.get("/home/hack400b/ftpoutput.txt", "ftpoutput.txt");
 
         BufferedReader buff = null;
-
+        txtS.setText("");
         try {
             buff = new BufferedReader(new FileReader("ftpoutput.txt"));
             String str;
@@ -307,7 +308,7 @@ public class ftp extends JFrame implements ActionListener {
 
 
         txtS = new JTextArea();
-        txtS.setBounds(10, 245, 750, 120);
+        txtS.setBounds(10, 245, 750, 520);
         add(txtS);
 
         //set testing values
