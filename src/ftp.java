@@ -52,6 +52,8 @@ public class ftp extends JFrame implements ActionListener {
     JTextField txtPort;
     JButton btnProcess;
     JButton btnConnect;
+    JButton btnDisconnect;
+
     JTextArea txtS;
     String newline = "\n";
     FTPClient ftpClient;
@@ -226,7 +228,7 @@ public class ftp extends JFrame implements ActionListener {
 
 
         this.setTitle("AS400 IBM FTP Command Interpreter");
-        this.setSize(800, 600);
+        this.setSize(800, 800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
@@ -235,35 +237,35 @@ public class ftp extends JFrame implements ActionListener {
         //add labels and text boxes
         lblHost = new JLabel("Host: ");
         lblHost.setBounds(10, 10, 90, 21);
-        add(lblHost);
+//        add(lblHost);
 
         txtHost = new JTextField();
         txtHost.setBounds(105, 10, 90, 21);
-        add(txtHost);
+//        add(txtHost);
 
         txtPort = new JTextField();
-        txtPort.setBounds(105, 35, 90, 21);
+        txtPort.setBounds(105, 10, 90, 21);
         add(txtPort);
 
         lblPort = new JLabel("Port: ");
-        lblPort.setBounds(10, 35, 90, 21);
+        lblPort.setBounds(10, 10, 90, 21);
         add(lblPort);
 
         lblUser = new JLabel("Username: ");
         lblUser.setBounds(10, 60, 90, 21);
-        add(lblUser);
+  //      add(lblUser);
 
         txtUser = new JTextField();
         txtUser.setBounds(105, 60, 90, 21);
-        add(txtUser);
+  //      add(txtUser);
 
         lblPass = new JLabel("Password: ");
         lblPass.setBounds(10, 85, 90, 21);
-        add(lblPass);
+   //     add(lblPass);
 
         txtPass = new JTextField();
         txtPass.setBounds(105, 85, 90, 21);
-        add(txtPass);
+    //    add(txtPass);
 
         lblCommand = new JLabel("Command: ");
         lblCommand.setBounds(10, 135, 90, 21);
@@ -293,22 +295,26 @@ public class ftp extends JFrame implements ActionListener {
       //  txtMark.setBounds(105, 60, 90, 21);
       //  add(txtMark);
 
-        btnConnect = new JButton("Initiate FTP");
-        btnConnect.setBounds(200, 40, 160, 40);
+        btnConnect = new JButton("Initiate FTP Connection");
+        btnConnect.setBounds(10, 40, 200, 40);
         btnConnect.addActionListener(this);
         add(btnConnect);
 
 
         btnProcess = new JButton("Process Command");
-        btnProcess.setBounds(10, 180, 160, 40);
+        btnProcess.setBounds(10, 180, 200, 40);
         btnProcess.addActionListener(this);
         add(btnProcess);
 
+        btnDisconnect = new JButton("Disconnect and Delete");
+        btnDisconnect.setBounds(10, 85, 200, 40);
+        btnDisconnect.addActionListener(this);
+        add(btnDisconnect);
 
 
 
         txtS = new JTextArea();
-        txtS.setBounds(10, 245, 750, 520);
+        txtS.setBounds(10, 245, 765, 500);
         add(txtS);
 
         //set testing values
