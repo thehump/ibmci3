@@ -55,6 +55,7 @@ public class ftp extends JFrame implements ActionListener {
     JButton btnDisconnect;
 
     JTextArea txtS;
+    JScrollPane scrollS;
     String newline = "\n";
     FTPClient ftpClient;
     String commandStr;
@@ -314,8 +315,14 @@ public class ftp extends JFrame implements ActionListener {
 
 
         txtS = new JTextArea();
-        txtS.setBounds(10, 245, 765, 500);
-        add(txtS);
+
+        //txtS.setBounds(10, 245, 765, 500);
+
+        scrollS = new JScrollPane(txtS);
+        scrollS.setBounds(10, 245, 765, 500);
+
+
+        add(scrollS);
 
         //set testing values
         txtHost.setText("192.168.69.69");
