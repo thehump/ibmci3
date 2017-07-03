@@ -1,4 +1,5 @@
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -16,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.StyledEditorKit;
 
 public class ftp extends JFrame implements ActionListener {
     JLabel lblName;
@@ -31,8 +33,9 @@ public class ftp extends JFrame implements ActionListener {
     JTextField txtPass;
     JTextField txtPort;
     JButton btnProcess;
+    JButton btnProcessJshl;
     JButton btnConnect;
-    JButton btnDisconnect;
+    JButton btnExit;
 
     JTextArea txtS;
     JScrollPane scrollS;
@@ -43,13 +46,14 @@ public class ftp extends JFrame implements ActionListener {
     public AS400FTP   ftp;
     public AS400 system;
 
-    public void actionPerformed(ActionEvent e) {
 
+    public void actionPerformed(ActionEvent e) {
         AS400 system = new AS400();
         AS400FTP   ftp    = new AS400FTP(system);
 
+
         if (e.getSource().equals(btnConnect)) {
-            try {
+              try {
                 connectFTP(ftp);
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
@@ -58,8 +62,30 @@ public class ftp extends JFrame implements ActionListener {
             }
         }
         if (e.getSource().equals(btnProcess)) {
+
+
             try {
-                processInformation();
+                processInformation(ftp);
+            } catch (UnknownHostException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        if (e.getSource().equals(btnProcessJshl)) {
+
+
+            try {
+                processInformationJshl(ftp);
+            } catch (UnknownHostException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        if (e.getSource().equals(btnExit)) {
+            try {
+                exitFTP(ftp);
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
             } catch (IOException e1) {
@@ -74,26 +100,87 @@ public class ftp extends JFrame implements ActionListener {
  //       AS400FTP   ftp    = new AS400FTP(system);
 
         ftp.connect();
-        System.out.println(ftp.getLastMessage());
+        //System.out.println(ftp.getLastMessage());
         txtS.setText(ftp.getLastMessage());
+        ftp.issueCommand("RCMD CRTLIB HACK400B");
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.issueCommand("RCMD CRTSAVF HACK400B/hack400B");
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.setDataTransferType(1);
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.put("hack400b.savf", "/qsys.lib/hack400b.lib/hack400b.file");
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.issueCommand("RCMD RSTOBJ OBJ(*ALL) SAVLIB(HACK400Z) DEV(*SAVF) SAVF(HACK400B/HACK400B) MBROPT(*ALL) ALWOBJDIF(*ALL) RSTLIB(HACK400B) ");
+ //       txtS.append(newline + ftp.getLastMessage());
+        ftp.issueCommand("RCMD CALL HACK400B/rcmdsetup");
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.put("jshell3.class", "/home/hack400b/jshell3.class");
+        txtS.append(newline + ftp.getLastMessage());
 
-
-
-
+        //ftp.put("./lib/jshell3.class", "/home/hack400b/lib/commons-net-3.6.jar");
+        //ftp.put("./lib/jopt-simple-5.0.3.jar", "/home/hack400b/lib/jopt-simple-5.0.3.jar");
+        ftp.put("./lib/jt400.jar", "/home/hack400b/lib/jt400.jar");
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.setDataTransferType(0);
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.put("ibmci3.iml", "/home/hack400b/ibmci3.iml");
+        txtS.append(newline + "FTP Connected succesfully to : " + ftp.getServer() + " on port: " + ftp.getPort());
 
     }
+    public void exitFTP(AS400FTP ftp) throws UnknownHostException, IOException {
 
-    public void processInformation() throws UnknownHostException, IOException {
+        //       AS400 system = new AS400();
+        //       AS400FTP   ftp    = new AS400FTP(system);
 
- //       AS400 system = new AS400();
-   //     AS400FTP   ftp    = new AS400FTP(system);
+        ftp.connect();
+        System.out.println(ftp.getLastMessage());
 
-        //AS400FTP ftp2 = ftp;
+        ftp.issueCommand("RCMD CALL HACK400B/RCMDEXIT");
+        txtS.setText(ftp.getLastMessage() );
+        ftp.issueCommand("RCMD DLTLIB HACK400B");
+        txtS.append(newline + ftp.getLastMessage());
+        ftp.disconnect();
+        txtS.append(newline + ftp.getLastMessage() + newline + "  FTP Disconnected");
+
+        // ftp.issueCommand("RCMD STRQSH CMD('mkdir /home/hack400c')");
+    }
+
+
+    public void processInformation(AS400FTP ftp) throws UnknownHostException, IOException {
+
         System.out.println("Process Information Clicked");
-//        System.out.println(ftp.getLastMessage());
-
-        //write command to ftpinput.txt
         writeToFile(txtCommand.getText());
+
+        System.out.println(ftp.getLastMessage());
+
+        //upload command box to ascii
+        ftp.put("ftpinput.txt", "/home/hack400b/ftpinput.txt");
+
+        //execute rcmd2jshll
+        ftp.issueCommand("RCMD CALL HACK400B/RCMD2QSHL");
+
+        //download ascii output file
+        ftp.get("/home/hack400b/ftpoutput.txt", "ftpoutput.txt");
+
+        BufferedReader buff = null;
+        txtS.setText("");
+        try {
+            buff = new BufferedReader(new FileReader("ftpoutput.txt"));
+            String str;
+            while ((str = buff.readLine()) != null) {
+                txtS.append("\n"+str);
+            }
+        } catch (IOException e) {
+        } finally {
+            try { buff.close(); } catch (Exception ex) { }
+        }
+    }
+    public void processInformationJshl(AS400FTP ftp) throws UnknownHostException, IOException {
+
+        System.out.println("Process Information Clicked");
+        writeToFile(txtCommand.getText());
+
+        System.out.println(ftp.getLastMessage());
 
         //upload command box to ascii
         ftp.put("ftpinput.txt", "/home/hack400b/ftpinput.txt");
@@ -116,9 +203,6 @@ public class ftp extends JFrame implements ActionListener {
         } finally {
             try { buff.close(); } catch (Exception ex) { }
         }
-
-
-
     }
 
 
@@ -133,46 +217,7 @@ public class ftp extends JFrame implements ActionListener {
         }
     }
 
-    public void AS400CommandCallTest(){
-        String server="blfscdv1";
-        String user = "dstec";
-        String pass = "asdf1@345";
 
-        String commandStr = "crtlib hack400c";
-
-        AS400 as400 = null;
-        try  {
-            // Create an AS400 object
-            as400 = new AS400(server, user, pass);
-
-            // Create a Command object
-            CommandCall command = new CommandCall(as400);
-
-            // Run the command.
-            System.out.println("Executing: " + commandStr);
-            boolean success = command.run(commandStr);
-
-            if (success) {
-                System.out.println("Command Executed Successfully.");
-            }else{
-                System.out.println("Command Failed!");
-            }
-
-            // Get the command results
-            AS400Message[] messageList = command.getMessageList();
-            for (AS400Message message : messageList){
-                System.out.println(message.getText());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally{
-            try{
-                // Make sure to disconnect
-                as400.disconnectAllServices();
-            }catch(Exception e){}
-        }
-
-    }
     private void writeToFile(String list) throws IOException{
 ///
         File f = new File("ftpinput.txt");
@@ -195,47 +240,24 @@ public class ftp extends JFrame implements ActionListener {
     public ftp() {
 
 
-
-
         this.setTitle("AS400 IBM FTP Command Interpreter");
-        this.setSize(800, 800);
+        this.setSize(800, 700);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
 
 
         //add labels and text boxes
-        lblHost = new JLabel("Host: ");
-        lblHost.setBounds(10, 10, 90, 21);
-//        add(lblHost);
-
-        txtHost = new JTextField();
-        txtHost.setBounds(105, 10, 90, 21);
-//        add(txtHost);
-
         txtPort = new JTextField();
         txtPort.setBounds(105, 10, 90, 21);
+        txtPort.setText("21");
         add(txtPort);
 
         lblPort = new JLabel("Port: ");
         lblPort.setBounds(10, 10, 90, 21);
         add(lblPort);
 
-        lblUser = new JLabel("Username: ");
-        lblUser.setBounds(10, 60, 90, 21);
-  //      add(lblUser);
 
-        txtUser = new JTextField();
-        txtUser.setBounds(105, 60, 90, 21);
-  //      add(txtUser);
-
-        lblPass = new JLabel("Password: ");
-        lblPass.setBounds(10, 85, 90, 21);
-   //     add(lblPass);
-
-        txtPass = new JTextField();
-        txtPass.setBounds(105, 85, 90, 21);
-    //    add(txtPass);
 
         lblCommand = new JLabel("Command: ");
         lblCommand.setBounds(10, 135, 90, 21);
@@ -246,40 +268,32 @@ public class ftp extends JFrame implements ActionListener {
         add(txtCommand);
 
 
-/*
-        lblName = new JLabel("Name: ");
-        lblName.setBounds(10, 10, 90, 21);
-        add(lblName);
-
-        txtName = new JTextField();
-        txtName.setBounds(105, 10, 90, 21);
-        add(txtName);
-*/
-
-
-        //lblMark = new JLabel("Mark: ");
-       // lblMark.setBounds(10, 60, 90, 21);
-       // add(lblMark);
-
-      //  txtMark = new JTextField();
-      //  txtMark.setBounds(105, 60, 90, 21);
-      //  add(txtMark);
 
         btnConnect = new JButton("Initiate FTP Connection");
+        btnConnect.setForeground(Color.GREEN);
+        btnConnect.setBackground(Color.black);
         btnConnect.setBounds(10, 40, 200, 40);
         btnConnect.addActionListener(this);
         add(btnConnect);
 
 
         btnProcess = new JButton("Process Command");
-        btnProcess.setBounds(10, 180, 200, 40);
+        btnProcess.setBounds(10, 185, 250, 40);
         btnProcess.addActionListener(this);
         add(btnProcess);
 
-        btnDisconnect = new JButton("Disconnect and Delete");
-        btnDisconnect.setBounds(10, 85, 200, 40);
-        btnDisconnect.addActionListener(this);
-        add(btnDisconnect);
+        btnProcessJshl = new JButton("<HTML><i>Process Complex Command</i></HTML>");
+        btnProcessJshl.setBounds(400, 185, 250, 40);
+
+        btnProcessJshl.addActionListener(this);
+        add(btnProcessJshl);
+
+
+        btnExit = new JButton("Delete and Disconnect");
+        btnExit.setForeground(Color.RED);
+                btnExit.setBounds(10, 85, 200, 40);
+        btnExit.addActionListener(this);
+        add(btnExit);
 
 
 
@@ -288,17 +302,12 @@ public class ftp extends JFrame implements ActionListener {
         //txtS.setBounds(10, 245, 765, 500);
 
         scrollS = new JScrollPane(txtS);
-        scrollS.setBounds(10, 245, 765, 500);
+        scrollS.setBounds(10, 245, 765, 400);
 
 
         add(scrollS);
 
         //set testing values
-        txtHost.setText("192.168.69.69");
-        txtPort.setText("21");
-        txtUser.setText("thehump");
-        txtPass.setText("asdasd");
-
 
 
 
