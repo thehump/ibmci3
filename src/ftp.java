@@ -3,34 +3,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.io.FileOutputStream;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
-import javax.swing.text.*;
-
-
-import java.io.IOException;
-
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.ftp.FTPCmd;
 import com.ibm.as400.access.AS400FTP;
 import com.ibm.as400.access.AS400;
 import com.ibm.as400.access.AS400Message;
 import com.ibm.as400.access.CommandCall;
-import com.ibm.as400.access.AS400SecurityException;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import java.util.Date;
-//import AS400CommandCallTest;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -60,14 +40,17 @@ public class ftp extends JFrame implements ActionListener {
     FTPClient ftpClient;
     String commandStr;
     CommandCall command;
-    AS400FTP   ftp;
-    AS400 system;
+    public AS400FTP   ftp;
+    public AS400 system;
 
     public void actionPerformed(ActionEvent e) {
 
+        AS400 system = new AS400();
+        AS400FTP   ftp    = new AS400FTP(system);
+
         if (e.getSource().equals(btnConnect)) {
             try {
-                connectFTP();
+                connectFTP(ftp);
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
             } catch (IOException e1) {
@@ -85,19 +68,10 @@ public class ftp extends JFrame implements ActionListener {
         }
     }
 
-    public void connectFTP() throws UnknownHostException, IOException {
+    public void connectFTP(AS400FTP ftp) throws UnknownHostException, IOException {
 
-        AS400 system = new AS400();
-        AS400FTP   ftp    = new AS400FTP(system);
-
-
-
-       // ftp.issueCommand("RCMD CALL CGBINF/RCMD2JSHL PARM('CRTLIB HACK400Z6')");
-
-
-        //ftp.issueCommand("help");
-
-        //String ftpoutput ="";
+ //       AS400 system = new AS400();
+ //       AS400FTP   ftp    = new AS400FTP(system);
 
         ftp.connect();
         System.out.println(ftp.getLastMessage());
@@ -111,19 +85,12 @@ public class ftp extends JFrame implements ActionListener {
 
     public void processInformation() throws UnknownHostException, IOException {
 
-/*
-        String server = txtHost.getText();
-        int port = Integer.parseInt(txtPort.getText());
-        String user = txtUser.getText();
-        String pass = txtPass.getText();
-
-*/
-        AS400 system = new AS400();
-        AS400FTP   ftp    = new AS400FTP(system);
+ //       AS400 system = new AS400();
+   //     AS400FTP   ftp    = new AS400FTP(system);
 
         //AS400FTP ftp2 = ftp;
         System.out.println("Process Information Clicked");
-        System.out.println(ftp.getLastMessage());
+//        System.out.println(ftp.getLastMessage());
 
         //write command to ftpinput.txt
         writeToFile(txtCommand.getText());
@@ -226,6 +193,8 @@ public class ftp extends JFrame implements ActionListener {
         ///
     }
     public ftp() {
+
+
 
 
         this.setTitle("AS400 IBM FTP Command Interpreter");
