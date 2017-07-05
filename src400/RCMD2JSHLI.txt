@@ -1,0 +1,23 @@
+ Columns . . . :    1  80                                       Edit                                                 HACK400Z/CLSRC 
+ SEU==>                                                                                                                  RCMD2JSHLI 
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+... 8                                            
+        *************** Beginning of data ***************************************************************************************   
+0001.00 /* RCMD2JSHLI COMMAND LINE PROGRAM */                                                170626                                 
+0002.00 /* DAVID STEC                      */                                                170626                                 
+0003.00 /* VERSION 1.3, JUNE 2017          */                                                170626                                 
+0004.00 PGM                                                                                  170626                                 
+0005.00            DCL        VAR(&JAVACMD) TYPE(*CHAR) LEN(150)                             170626                                 
+0006.00                                                                                      170618                                 
+0007.00              CHGVAR     VAR(&JAVACMD) VALUE('cd /home/hack400b/ ; +                  170620                                 
+0008.00                           java -cp .:/home/dstec/lib/jt400.jar +                     170620                                 
+0009.00                           jshell3 ')                                                 170620                                 
+0010.00              CHGVAR     VAR(&JAVACMD) VALUE(&JAVACMD *TCAT ' >> +                    170618                                 
+0011.00                           /home/hack400b/ftpoutput.txt')                             170618                                 
+0012.00                                                                                      170626                                 
+0013.00           STRQSH CMD( &JAVACMD  )                                                    170701                                 
+0014.00                                                                                      170626                                 
+0015.00           SNDPGMMSG  MSG(&JAVACMD)                                                   170626                                 
+0017.00                                                                                      170626                                 
+0019.00 ENDPGM                                                                               170626                                 
+        ****************** End of data ******************************************************************************************   
+                                                                                                                                    

@@ -1,36 +1,19 @@
+import com.ibm.as400.access.AS400;
+import com.ibm.as400.access.AS400FTP;
+import com.ibm.as400.access.CommandCall;
+import org.apache.commons.net.ftp.FTPClient;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.io.*;
-import javax.swing.*;
-import org.apache.commons.net.ftp.FTPClient;
-import com.ibm.as400.access.AS400FTP;
-import com.ibm.as400.access.AS400;
-import com.ibm.as400.access.AS400Message;
-import com.ibm.as400.access.CommandCall;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.text.StyledEditorKit;
+import java.net.UnknownHostException;
 
-public class ftp extends JFrame implements ActionListener {
-    JLabel lblName;
+public class ibmci3 extends JFrame implements ActionListener {
     JLabel lblCommand;
-    JLabel lblHost;
-    JLabel lblUser;
-    JLabel lblPass;
     JLabel lblPort;
-    JTextField txtName;
     JTextField txtCommand;
-    JTextField txtHost;
-    JTextField txtUser;
-    JTextField txtPass;
     JTextField txtPort;
     JButton btnProcess;
     JButton btnProcessJshl;
@@ -40,8 +23,7 @@ public class ftp extends JFrame implements ActionListener {
     JTextArea txtS;
     JScrollPane scrollS;
     String newline = "\n";
-    FTPClient ftpClient;
-    String commandStr;
+
     CommandCall command;
     public AS400FTP   ftp;
     public AS400 system;
@@ -148,9 +130,9 @@ public class ftp extends JFrame implements ActionListener {
 
     public void processInformation(AS400FTP ftp) throws UnknownHostException, IOException {
 
-        System.out.println("Process Information Clicked");
+        System.out.println("Proess Information Clicked");
         writeToFile(txtCommand.getText());
-
+        txtS.append(newline);
         System.out.println(ftp.getLastMessage());
 
         //upload command box to ascii
@@ -203,6 +185,7 @@ public class ftp extends JFrame implements ActionListener {
         } finally {
             try { buff.close(); } catch (Exception ex) { }
         }
+        txtS.append(newline);
     }
 
 
@@ -237,11 +220,11 @@ public class ftp extends JFrame implements ActionListener {
         }
         ///
     }
-    public ftp() {
+    public ibmci3() {
 
 
         this.setTitle("AS400 IBM FTP Command Interpreter");
-        this.setSize(800, 700);
+        this.setSize(800, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
@@ -277,12 +260,12 @@ public class ftp extends JFrame implements ActionListener {
         add(btnConnect);
 
 
-        btnProcess = new JButton("Process Command");
+        btnProcess = new JButton("Process Display Command");
         btnProcess.setBounds(10, 185, 250, 40);
         btnProcess.addActionListener(this);
         add(btnProcess);
 
-        btnProcessJshl = new JButton("<HTML><i>Process Complex Command</i></HTML>");
+        btnProcessJshl = new JButton("<HTML><i>Process Jshell Command</i></HTML>");
         btnProcessJshl.setBounds(400, 185, 250, 40);
 
         btnProcessJshl.addActionListener(this);
@@ -302,7 +285,7 @@ public class ftp extends JFrame implements ActionListener {
         //txtS.setBounds(10, 245, 765, 500);
 
         scrollS = new JScrollPane(txtS);
-        scrollS.setBounds(10, 245, 765, 400);
+        scrollS.setBounds(10, 245, 765, 300);
 
 
         add(scrollS);
@@ -318,7 +301,7 @@ public class ftp extends JFrame implements ActionListener {
     public static void main(String[] args) {
 
 
-        new ftp();
+        new ibmci3();
     }
 
 
