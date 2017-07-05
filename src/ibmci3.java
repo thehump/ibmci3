@@ -1,6 +1,6 @@
 /*  ibmci3.java client program
-David Stec
-Version 1.0, 2017
+David Stec, david.m.stec@gmail.com
+Version 1.0, June 2017
  */
 
 
